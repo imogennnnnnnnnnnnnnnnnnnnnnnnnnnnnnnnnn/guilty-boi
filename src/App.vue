@@ -6,8 +6,8 @@
     a(href='https://github.com/imogennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn/guilty-boi') github
   iframe#barbra(
     type='text/html'
-    width='1'
-    height='1'
+    width='32'
+    height='32'
     src='https://www.youtube.com/embed/AnxnQ8Murjg?autoplay=1&loop=1'
     frameborder='0'
     allow='autoplay; encrypted-media'
@@ -57,8 +57,7 @@ nav
 
 #barbra
   position fixed
-  top 0
-  left 0
-  pointer-events none
-  opacity 0
+  top -20px
+  left -20px
+  opacity 0.01
 </style>
