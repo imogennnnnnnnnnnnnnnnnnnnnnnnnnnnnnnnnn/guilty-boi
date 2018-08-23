@@ -1,7 +1,9 @@
 <template lang='pug'>
 #app
   router-view/
-  router-link(to='/api') api
+  nav
+    router-link(to='/api') api
+    a(href='https://github.com/imogennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn/guilty-boi') github
   iframe#barbra(
     type='text/html'
     width='1'
@@ -13,8 +15,15 @@
 </template>
 
 <script>
+import heap from './vendor/heap'
+
+const HEAP_ID = '2405005588'
+
 export default {
-  name: 'app'
+  name: 'app',
+  mounted() {
+    heap(HEAP_ID)
+  }
 }
 </script>
 
@@ -37,12 +46,14 @@ export default {
   text-align center
   background-color red
 
-a
+nav
   position fixed
   right 12px
   bottom 20px
   @media (min-width 640px)
     right 32px
+  * + *
+    margin-left 10px
 
 #barbra
   position fixed
