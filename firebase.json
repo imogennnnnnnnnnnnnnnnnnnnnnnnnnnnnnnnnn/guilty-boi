@@ -8,8 +8,8 @@
     ],
     "rewrites": [
       {
-        "source": "/api/bois",
-        "function": "bois"
+        "source": "/api/**",
+        "function": "api"
       },
       {
         "source": "**",

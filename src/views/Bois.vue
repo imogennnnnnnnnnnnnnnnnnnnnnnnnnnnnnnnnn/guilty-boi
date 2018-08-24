@@ -5,7 +5,7 @@
 <script>
 import Boi from '@/components/Boi.vue'
 
-const BASE_URL = 'https://us-central1-guilty-boi.cloudfunctions.net'
+const BASE_URL = 'https://us-central1-guilty-boi.cloudfunctions.net/api'
 
 export default {
   name: 'Bois',

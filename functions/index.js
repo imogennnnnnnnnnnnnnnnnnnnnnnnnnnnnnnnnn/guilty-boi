@@ -1,39 +1,46 @@
-const functions = require('firebase-functions');
-const admin     = require('firebase-admin');
+const functions = require('firebase-functions')
+const admin     = require('firebase-admin')
+const express   = require('express')
+const cors      = require('cors')
+
+const API_PREFIX = 'api'
 
 admin.initializeApp();
 const db = admin.firestore();
+db.settings({timestampsInSnapshots: true})
 
-const getBois = async (req, res) => {
-  try {
-    let docs = []
-    const snapshot = await db.collection('bois').get()
-    snapshot.forEach((doc) => {
-      docs.push({
-        id: doc.id,
-        ...doc.data()
-      })
-    })
-    console.log(docs)
-    res.status(200).send(JSON.stringify(docs))
-  } catch(e) {
-    console.error(e)
-    res.status(500).send({ error: e })
+const app = express()
+app.use((req, res, next) => {
+  if (req.url.indexOf(`/${API_PREFIX}/`) === 0) {
+    req.url = req.url.substring(API_PREFIX.length + 1);
   }
-}
-
-exports.bois = functions.https.onRequest((req, res) => {
-  res .set('Content-Type', 'application/json')
-      .set('Access-Control-Allow-Origin', '*')
-      .set('Access-Control-Allow-Methods', 'GET')
-  switch (req.method) {
-    case 'OPTIONS':
-      res.status(204).send('');
-      break;
-    case 'GET':
-      getBois(req, res);
-      break;
-    default:
-      res.status(500).send({ error: 'try a diff verb friend' });
-  }
+  next();
 });
+app.use(cors({origin: true}))
+app.options('*', cors())
+
+app.get('/bois', async (req, res) => {
+  const bois = await db.collection('bois').get()
+  res.json(bois.docs.map(boi => ({
+    id: boi.id,
+    ...boi.data()
+  })))
+})
+app.get('/bois/:id', async (req, res) => {
+  const boi = await db.doc(`bois/${req.params.id}`).get()
+  if (!boi.exists) res.status(404).end()
+  res.json({
+    id: boi.id,
+    ...boi.data()
+  })
+})
+app.get('/bois/:id/verify', async (req, res) => {
+  const boi = await db.doc(`bois/${req.params.id}`).get()
+  if (!boi.exists) res.status(404).end()
+  res.json({
+    very: true,
+    message: "it's a boi!!"
+  })
+})
+
+exports[API_PREFIX] = functions.https.onRequest(app)
